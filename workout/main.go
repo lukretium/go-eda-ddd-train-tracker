@@ -15,13 +15,9 @@ func main() {
 	publisher := &infrastructure.StdoutPublisher{}
 	logWorkoutHandler := command.NewLogWorkoutHandler(repo, publisher)
 	getWorkoutByIDHandler := query.NewGetWorkoutByIDHandler(repo)
+	listWorkoutsByUserHandler := query.NewListWorkoutsByUserHandler(repo)
 
-	handler := &api.WorkoutHandler{
-		LogWorkoutHandler:     logWorkoutHandler,
-		GetWorkoutByIDHandler: getWorkoutByIDHandler,
-	}
-
-	router := api.NewRouter(handler)
+	router := api.NewRouter(logWorkoutHandler, getWorkoutByIDHandler, listWorkoutsByUserHandler)
 
 	log.Println("Listening on :8080")
 	log.Fatal(http.ListenAndServe(":8080", router))

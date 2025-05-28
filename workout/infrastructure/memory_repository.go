@@ -11,6 +11,8 @@ type MemoryWorkoutRepository struct {
 	workouts map[string]*domain.Workout
 }
 
+var _ domain.WorkoutRepository = (*MemoryWorkoutRepository)(nil) // compile-time check
+
 func NewMemoryWorkoutRepository() *MemoryWorkoutRepository {
 	return &MemoryWorkoutRepository{
 		workouts: make(map[string]*domain.Workout),
@@ -32,4 +34,16 @@ func (r *MemoryWorkoutRepository) FindByID(id string) (*domain.Workout, error) {
 		return nil, nil
 	}
 	return w, nil
+}
+
+func (r *MemoryWorkoutRepository) ListByUserID(userID string) ([]*domain.Workout, error) {
+	r.mu.RLock()
+	defer r.mu.RUnlock()
+	var result []*domain.Workout
+	for _, w := range r.workouts {
+		if w.UserID == userID {
+			result = append(result, w)
+		}
+	}
+	return result, nil
 }

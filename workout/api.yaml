@@ -45,6 +45,29 @@ paths:
           description: Workout not found
         '500':
           description: Internal server error
+  /users/{userId}/workouts:
+    get:
+      summary: List all workouts for a user
+      parameters:
+        - in: path
+          name: userId
+          schema:
+            type: string
+          required: true
+          description: The user ID
+      responses:
+        '200':
+          description: List of workouts
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Workout'
+        '400':
+          description: Invalid request
+        '500':
+          description: Internal server error
 components:
   schemas:
     Exercise:
@@ -52,22 +75,28 @@ components:
       properties:
         name:
           type: string
+          example: "Bench Press"
         sets:
           type: integer
+          example: 3
         reps:
           type: integer
+          example: 10
         weight:
           type: number
           format: float
+          example: 100.0
       required: [name, sets, reps, weight]
     LogWorkoutRequest:
       type: object
       properties:
         userId:
           type: string
+          example: "123"
         date:
           type: string
           format: date
+          example: "2025-01-01"
         exercises:
           type: array
           items:

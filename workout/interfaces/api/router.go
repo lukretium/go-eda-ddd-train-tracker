@@ -2,6 +2,8 @@ package api
 
 import (
 	"net/http"
+	"workout/application/command"
+	"workout/application/query"
 )
 
 type Router struct {
@@ -21,21 +23,14 @@ func withCORS(next http.Handler) http.Handler {
 	})
 }
 
-func NewRouter(handler *WorkoutHandler) http.Handler {
+func NewRouter(
+	logWorkoutHandler *command.LogWorkoutHandler,
+	getWorkoutByIDHandler *query.GetWorkoutByIDHandler,
+	listWorkoutsByUserHandler *query.ListWorkoutsByUserHandler,
+) http.Handler {
 	mux := http.NewServeMux()
-	mux.HandleFunc("/workouts", func(w http.ResponseWriter, r *http.Request) {
-		if r.Method == http.MethodPost {
-			handler.LogWorkout(w, r)
-			return
-		}
-		w.WriteHeader(http.StatusMethodNotAllowed)
-	})
-	mux.HandleFunc("/workouts/", func(w http.ResponseWriter, r *http.Request) {
-		if r.Method == http.MethodGet {
-			handler.GetWorkoutByID(w, r)
-			return
-		}
-		w.WriteHeader(http.StatusMethodNotAllowed)
-	})
+	mux.HandleFunc("/workouts", LogWorkoutHandlerFunc(logWorkoutHandler.Handle))
+	mux.HandleFunc("/workouts/", GetWorkoutByIDHandlerFunc(getWorkoutByIDHandler))
+	mux.HandleFunc("/users/", ListWorkoutsByUserHandlerFunc(listWorkoutsByUserHandler))
 	return withCORS(mux)
 }
