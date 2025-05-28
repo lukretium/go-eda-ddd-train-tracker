@@ -13,7 +13,11 @@ This document tracks open tasks and planned enhancements for the Workout Service
 - [x] Return structured error responses (error codes, details)
 
 ## 📈 Observability
-- [ ] Add structured logging for requests, errors, and events
+- [/] Add structured logging for requests, errors, and events
+  - [ ] Use a structured logger (e.g., zerolog, logrus)
+  - [ ] Log all incoming HTTP requests (method, path, status, duration)
+  - [ ] Log all errors with context
+  - [ ] Log all emitted events (event type, payload)
 - [ ] Integrate OpenTelemetry for distributed tracing
 - [ ] Expose Prometheus metrics (workouts logged, errors, etc.)
 

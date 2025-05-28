@@ -1,8 +1,11 @@
 package main
 
 import (
-	"log"
 	"net/http"
+	"os"
+
+	"github.com/rs/zerolog"
+	"github.com/rs/zerolog/log"
 
 	"workout/application/command"
 	"workout/application/query"
@@ -11,6 +14,9 @@ import (
 )
 
 func main() {
+	// Use zerolog ConsoleWriter for pretty, colorized logs in the terminal
+	log.Logger = log.Output(zerolog.ConsoleWriter{Out: os.Stderr})
+
 	repo := infrastructure.NewMemoryWorkoutRepository()
 	publisher := &infrastructure.StdoutPublisher{}
 	logWorkoutHandler := command.NewLogWorkoutHandler(repo, publisher)
@@ -19,6 +25,6 @@ func main() {
 
 	router := api.NewRouter(logWorkoutHandler, getWorkoutByIDHandler, listWorkoutsByUserHandler)
 
-	log.Println("Listening on :8080")
-	log.Fatal(http.ListenAndServe(":8080", router))
+	log.Info().Msg("Listening on :8080")
+	log.Fatal().Err(http.ListenAndServe(":8080", router)).Msg("")
 }
