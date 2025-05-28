@@ -1,0 +1,8 @@
+// Go workspace for Train Tracker Fitness Coaching Platform
+// Add additional modules (e.g., user, goal-tracker) as you grow the project.
+
+go 1.24.3
+
+use (
+	./workout
+)

@@ -1,0 +1,90 @@
+openapi: 3.0.3
+info:
+  title: Workout Service API
+  version: 1.0.0
+  description: API for logging and retrieving workouts.
+servers:
+  - url: http://localhost:8080
+paths:
+  /workouts:
+    post:
+      summary: Log a new workout
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LogWorkoutRequest'
+      responses:
+        '200':
+          description: Workout logged successfully
+        '400':
+          description: Invalid request
+        '500':
+          description: Internal server error
+  /workouts/{id}:
+    get:
+      summary: Get a workout by ID
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+          description: The workout ID
+      responses:
+        '200':
+          description: The workout
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Workout'
+        '400':
+          description: Missing workout id
+        '404':
+          description: Workout not found
+        '500':
+          description: Internal server error
+components:
+  schemas:
+    Exercise:
+      type: object
+      properties:
+        name:
+          type: string
+        sets:
+          type: integer
+        reps:
+          type: integer
+        weight:
+          type: number
+          format: float
+      required: [name, sets, reps, weight]
+    LogWorkoutRequest:
+      type: object
+      properties:
+        userId:
+          type: string
+        date:
+          type: string
+          format: date
+        exercises:
+          type: array
+          items:
+            $ref: '#/components/schemas/Exercise'
+      required: [userId, date, exercises]
+    Workout:
+      type: object
+      properties:
+        id:
+          type: string
+        userId:
+          type: string
+        date:
+          type: string
+          format: date-time
+        exercises:
+          type: array
+          items:
+            $ref: '#/components/schemas/Exercise'
+      required: [id, userId, date, exercises] 

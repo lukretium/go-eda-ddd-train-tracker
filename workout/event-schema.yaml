@@ -1,0 +1,19 @@
+events:
+  - name: workout.logged
+    description: Emitted when a workout is logged
+    version: 1
+    payload:
+      userId: string
+      workoutId: string
+      date: string  # ISO 8601
+      exercises:
+        - name: string
+          sets: integer
+          reps: integer
+          weight: number
+  - name: workout.deleted
+    description: Emitted when a workout is deleted
+    version: 1
+    payload:
+      userId: string
+      workoutId: string 
